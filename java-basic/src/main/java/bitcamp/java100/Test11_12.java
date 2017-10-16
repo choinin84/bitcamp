@@ -13,8 +13,11 @@ public class Test11_12 {
     System.out.println("ABC\uAC00\uac00똘똠똥");
     System.out.println("");
 
-
+  
     
-
+    
+    System.out.printf("10 + 20= %d\n", 10 + 20);
+   
+    
 }
 }
