@@ -15,12 +15,10 @@ public class Test21_7 {
      }  
     
 
-    String str = console.readLine("문자열:");
+    String sen = console.readLine("문자열:");
      
-    
-    System.out.print("문자열 입력: ");
-    for(int i = str.length()-1; i >= 0; i--) {
-        System.out.print(str.charAt(i));
+      for(int i = sen.length()-1; i >= 0; i--) {
+        System.out.print(sen.charAt(i));
     }
     
    
