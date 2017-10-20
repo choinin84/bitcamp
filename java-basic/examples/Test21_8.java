@@ -50,12 +50,9 @@ public class Test21_8 {
                         System.out.printf("%s\t", names.get(x));
                         System.out.printf("%s",   email.get(x));
                         System.out.printf("%s\n", phone.get(x));
-                        
-                        
                 
-            }
-        }
-
+}
+}
 }
     
 

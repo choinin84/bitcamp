@@ -21,12 +21,6 @@ public class Test21_7 {
         System.out.print(sen.charAt(i));
     }
     
-   
-  
-        
-           
-       
-
 }
 
 }
