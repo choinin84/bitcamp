@@ -1,0 +1,8 @@
+gradle init --type java-application 설치
+
+gradle build 빌드파일 다운로드
+
+gradle classes 컨파일
+
+set classpath="class 파일주소"
+
