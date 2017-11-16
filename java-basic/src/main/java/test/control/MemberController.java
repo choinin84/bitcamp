@@ -1,14 +1,63 @@
 package test.control;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
 import test.domain.Board;
 import test.domain.Member;
+import test.domain.Score;
 import test.util.Prompts;
 
 public class MemberController extends GenericController<Member> {
-    
+
+    private String dataFilePath;
+
+    public MemberController(String dataFilePath) {
+        this.dataFilePath = dataFilePath;
+        this.init();
+    }
+
+    @Override
+    public void destroy() {
+        try(FileWriter out = new FileWriter(this.dataFilePath);){
+            for(Member member : this.list) {
+                out.write(member.toCSVString()+ "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+
+    @Override
+    public void init() {
+
+        try (
+                FileReader in = new FileReader(this.dataFilePath);
+                Scanner lineScan = new Scanner(in);) {
+
+            String csv = null;
+            while (lineScan.hasNextLine()) {
+                csv = lineScan.nextLine();
+                try {
+                    list.add(new Member(csv));
+                } catch (CSVFormatException e) {
+                    System.err.println("CSV 데이터 형식 오류!");
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     @Override
     public void execute() {
         loop:
@@ -63,16 +112,16 @@ public class MemberController extends GenericController<Member> {
         String email = Prompts.inputString("이메일? ");
 
         Member member = findByEmail(email);
-        
+
         if (member == null) {
             System.out.printf("'%s'의 회원 정보가 없습니다.\n", email);
             return;
         } 
-            System.out.printf("이름: %s\n", member.getName());
-            System.out.printf("이메일: %s\n", member.getEmail());
-            System.out.printf("암호: %s\n", member.getPassword());
-        }
-    
+        System.out.printf("이름: %s\n", member.getName());
+        System.out.printf("이메일: %s\n", member.getEmail());
+        System.out.printf("암호: %s\n", member.getPassword());
+    }
+
 
     private void doUpdate() {
         System.out.println("[회원 변경]");
@@ -84,22 +133,22 @@ public class MemberController extends GenericController<Member> {
             System.out.printf("'%s'의 회원 정보가 없습니다.\n", email);
             return;
         } 
-       
+
         String name = Prompts.inputString("이름?($s)", member.getName());
         if (name.isEmpty()) {
             name = member.getName();
         }
-        
+
         String password = Prompts.inputString("암호?", member.getPassword());
         if (password.isEmpty()) {
             password = member.getPassword();
         }
-        
+
         if (Prompts.confirm2("변경하시겠습니까?(y/N) ")) {
             member.setName(name);
             member.setPassword(password);
             System.out.println("변경하였습니다.");
-            
+
         } else {
             System.out.println("변경을 취소하였습니다.");
         }

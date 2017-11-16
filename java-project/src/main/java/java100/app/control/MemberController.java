@@ -1,33 +1,37 @@
 package java100.app.control;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Iterator;
-import java.util.Scanner;
 
 import java100.app.domain.Member;
-import java100.app.domain.Score;
 import java100.app.util.Prompts;
 
 public class MemberController extends GenericController<Member> {
     
     private String dataFilePath;
     
-    public MemberController(String datafilepath) {
+    public MemberController(String dataFilePath) {
         this.dataFilePath = dataFilePath;
-        this.init(); 
-    }
-    public MemberController() {
         this.init();
     }
     
     @Override
     public void destroy() {
-        try (FileWriter out = new FileWriter(this.dataFilePath);) {
+        
+        try (PrintWriter out = new PrintWriter(
+                new BufferedWriter(
+                        new FileWriter(this.dataFilePath)));) {
             for (Member member : this.list) {
-                out.write(member.toCSVString()+ "\n");
+                out.println(member.toCSVString());
             }
+            
+            out.flush();
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,32 +39,32 @@ public class MemberController extends GenericController<Member> {
     
     @Override
     public void init() {
-        try (FileReader in= new FileReader(this.dataFilePath);){ 
-             Scanner lineScan = new Scanner(in);{
-           
-                String csv = null;
-                while(lineScan.hasNextLine()) {
-                   csv = lineScan.nextLine(); 
-                  try{
-                   list.add(new Member(csv));
-                   } catch (CSVFormatException e) {
-                       System.err.println("CSV 데이타 오류");
-                       e.printStackTrace();
-                   }
+        
+        try (BufferedReader in = new BufferedReader(
+                new FileReader(this.dataFilePath));) {
+            
+            String csv = null;
+            while ((csv = in.readLine()) != null) {
+                try {
+                    list.add(new Member(csv));
+                } catch (CSVFormatException e) {
+                    System.err.println("CSV 데이터 형식 오류!");
+                    e.printStackTrace();
                 }
-             }
-                
-        }   catch(IOException e) {
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
-    @Override
+  
+    @Override    
     public void execute() {
         loop:
         while (true) {
             System.out.print("회원관리> ");
             String input = keyScan.nextLine();
+            
             
             switch (input) {
             case "list": this.doList(); break;
