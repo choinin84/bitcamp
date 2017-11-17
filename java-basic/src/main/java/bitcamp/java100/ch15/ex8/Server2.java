@@ -12,8 +12,9 @@ public class Server2 {
     static class MyWorker extends Thread{
         Socket socket;
         public MyWorker(Socket socket) {
-            this.socket = socket;
+             this.socket = socket;
         }
+        
         @Override
         public void run() {
                 try {
@@ -47,11 +48,9 @@ public class Server2 {
                     
                 }catch(Exception e) {
                     System.out.println("클라이언트와 대화 도중 예외 발생");
-                }
-            }
-           
-        }
-    
+}
+}
+}
     
     public static void main(String[] args) throws Exception {
         
@@ -62,7 +61,6 @@ public class Server2 {
         Socket socket = ss.accept();
         System.out.printf("%s에서 접속하였습니다", socket.getInetAddress().getHostAddress());
         new MyWorker(socket).start();
-    }
-    }
-    
+}
+}
 }
